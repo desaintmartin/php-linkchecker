@@ -70,9 +70,9 @@ class GlLinkChecker
         foreach ($obj as $key => $elem) {
             if (is_string($elem)) {
                 if (preg_match("/^(http|https|ftp|ftps).*$/", $elem)) {
-                    if (filter_var($elem, FILTER_VALIDATE_URL)) {
+                    //if (filter_var($elem, FILTER_VALIDATE_URL)) {
                         $links[$elem] = $elem;
-                    }
+                    //}
                 }
             } else {
                 if (is_array($elem)) {
@@ -213,14 +213,14 @@ class GlLinkChecker
      * @throws \Exception
      * @return GlLinkCheckerError[]
      */
-    public function checkFiles(Finder $files, callable $checkstart, callable $checking, callable $checkend)
+    public function checkFiles($file, callable $checkstart, callable $checking, callable $checkend)
     {
         $linksByFile = [];
         /**
          * @var SplFileInfo $file
          */
-        foreach ($files as $file) {
-            $inner   = file_get_contents($file->getRealPath());
+        /*foreach ($files as $file) {
+            $inner   = $file;
             $keyname = $file->getRelativePathname();
             if ($file->getExtension() == 'html') {
                 $html                  = new GlHtml($inner);
@@ -232,7 +232,8 @@ class GlLinkChecker
                     throw new \Exception("Extension unknown : " . $keyname);
                 }
             }
-        }
+        }*/
+        $linksByFile['json file'] = $this->getJsonLinks($file);
 
         //reverse $linksByFile
         $links = [];
@@ -261,3 +262,4 @@ class GlLinkChecker
         return $result;
     }
 }
+
