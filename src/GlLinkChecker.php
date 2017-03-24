@@ -70,8 +70,20 @@ class GlLinkChecker
         foreach ($obj as $key => $elem) {
             if (is_string($elem)) {
                 if (preg_match("/^(http|https|ftp|ftps).*$/", $elem)) {
-                    //if (filter_var($elem, FILTER_VALIDATE_URL)) {
-                        $links[$elem] = $elem;
+                    //if (!filter_var($elem, FILTER_VALIDATE_URL)) {
+                    $forbidden_url_list = [
+                      'http://ftvingest-vh.akamaihd.net/i/ingest/streaming-adaptatif_france-dom-tom',
+                      'http://replayftv-vh.akamaihd.net/i/streaming-adaptatif_france-dom-tom'
+                    ];
+                    $allowed = true;
+                    foreach ($forbidden_url_list as $forbidden_url) {
+                      if(substr($elem, 0, strlen($forbidden_url)) === $forbidden_url) {
+                        $allowed = false;
+                      }
+                    }
+                    if ($allowed) {
+                      $links[$elem] = $elem;
+                    }
                     //}
                 }
             } else {
